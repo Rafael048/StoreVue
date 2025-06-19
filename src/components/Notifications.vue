@@ -8,7 +8,7 @@
                     {{ props.store.notification.messages }}
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn @click="()=>props.store.notificationDialog = !props.store.notificationDialog">
+                    <v-btn @click="()=>props.store.notificationDialog = false">
                         Aceptar
                     </v-btn>
                 </v-card-actions>
@@ -16,8 +16,18 @@
     </v-dialog>
 </template>
 <script setup>
+import {  watch } from 'vue';
+
     const props = defineProps({
         store : Object
+    })
+
+watch(()=>props.store.notificationDialog,(newVal)=>{
+        if(newVal===true){
+            setTimeout(() => {
+               props.store.notificationDialog = false
+            }, 2000);
+        }       
     })
 </script>
 <style scoped>

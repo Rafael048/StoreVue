@@ -7,7 +7,6 @@
           <v-toolbar-title>Placeholder</v-toolbar-title>
   
   
-          <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
         </v-app-bar>
   
         <v-navigation-drawer
@@ -16,7 +15,7 @@
           temporary
         >
           <v-list>
-            <v-list-item title="Proveedores" to="/proveedores">
+            <v-list-item title="Proveedores" to="/materiaPrima/proveedores">
 
             </v-list-item>
         </v-list>

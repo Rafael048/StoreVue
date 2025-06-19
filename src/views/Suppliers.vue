@@ -1,6 +1,7 @@
 <script setup>
 import Header from '../components/Header.vue';
 import AddItems from '@/components/AddItems.vue';
+import Table from '@/components/Table.vue';
 import { useSupplierStore } from '@/stores/SupplierStore';
 import { onMounted } from 'vue';
 import Notifications from '@/components/Notifications.vue';
@@ -13,8 +14,13 @@ const headers = [{
   key : 'codigo',
   title : 'Código'
 },{
-  key : 'telefono',
+  key : 'telefonoVista',
   title : 'Telefono'
+},{
+  key : 'actions',
+  title : 'Acciones',
+  sortable : false,
+  aling : 'end'
 }
 ]
 const formFields = [{
@@ -54,8 +60,9 @@ onMounted(async()=>{
       :nameView = nameView
       />
       <v-card-item>
-        <v-data-table :items="SupplierStore.items" :headers="headers" >
-        </v-data-table>
+        <Table 
+        :store="SupplierStore"
+        :headers="headers"/>
 
       </v-card-item>
       
