@@ -21,28 +21,28 @@ const rawMaterial = computed(()=>RawMaterialStore.items)
 const headers = [{
   key : 'nombre',
   title : 'Nombre',
-  align : 'center',
+  align : 'start',
   
 },{
   key : 'precio',
   title : 'Precio',
-  align : 'center'
+  align : 'start'
 },{
   key : 'categoria',
   title : 'Categoría',
-  align : 'center'
+  align : 'start'
 },{
   key : 'proveedor',
   title : 'Proveedor',
-  align : 'center'
+  align : 'start'
 },{
   key : 'unidad',
   title : 'Unidad de medida',
-  align : 'center'
+  align : 'start'
 },{
   key : 'inventario.cantidad',
   title : 'Cantidad en stock',
-  align : 'center'
+  align : 'start'
 },{
   key : 'actions',
   title : 'Acciones',
@@ -85,6 +85,12 @@ const formFieldsInventory = computed(()=>
   key : 'cantidad',
   label : 'Cantidad',
   type : 'number'
+},{
+  key : 'unidadInv',
+  label : 'Unidad de medida',
+  type : 'select',
+  options : units.value
+
 }]
 )
 const nameView = 'Materia Prima'

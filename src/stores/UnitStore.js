@@ -8,6 +8,8 @@ const comprobations = dataComprobation()
 const items = ref([])
 const data = ref({
     nombre : '',
+     tipo: '',
+    factorBase: ''
 })
 const loading = ref(true)
 const dataEdit = ref({})
@@ -16,6 +18,7 @@ const showDialogDelete = ref(false)
 const notificationDialog = ref(false)
 const notification = ref({})
 const isEdit = ref(false)
+const buttonLoading = ref(false)
 async function getData() {
     const result = await apiCall('materiaPrima/unidades')
     if(result.status!=200){
@@ -28,6 +31,8 @@ async function getData() {
 function add(){
     data.value = {
         nombre : '',
+        tipo: '',
+        factorBase: ''
     }
     showDialog.value = true
 }
@@ -35,11 +40,17 @@ function edit(item){
     dataEdit.value = {...item}
      data.value = {
         nombre : item.nombre,
+        tipo: item.tipo,
+        factorBase: item.factorBase
     }
     isEdit.value = true
     showDialog.value = true
 }
 async function save() {
+    buttonLoading.value = true
+    if(data.value.tipo==='Unidad'){
+        data.value.factorBase = 1
+    }
     const dataValues = Object.values(data.value)
     const errors = validate(dataValues)
     if(errors.length>0){
@@ -49,6 +60,7 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+        buttonLoading.value = false
         return
     }else{
         if(isEdit.value){
@@ -60,6 +72,7 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+        buttonLoading.value = false
         return
             }else{
                 const result = await apiCall(`materiaPrima/unidades/${dataEdit.value.id}/`,'PATCH', obj)
@@ -71,6 +84,7 @@ async function save() {
             
         }
             notificationDialog.value = true
+             buttonLoading.value = false
             return
                 }else{
                     notification.value = {
@@ -79,11 +93,14 @@ async function save() {
             type : 'Success'
         }
         notificationDialog.value = true
+        
                 }
             }
         }else{
              const obj = {
-            nombre : data.value.nombre 
+            nombre : data.value.nombre,
+            tipo: data.value.tipo,
+            factorBase: data.value.factorBase
         }
         const result = await apiCall('materiaPrima/unidades/','POST', obj)
         if(result.status!=201){
@@ -94,6 +111,7 @@ async function save() {
             
         }
             notificationDialog.value = true
+            buttonLoading.value = false
             return
 
         }else{
@@ -105,9 +123,11 @@ async function save() {
         notificationDialog.value = true
         }
         }
-       
+      buttonLoading.value = false
         data.value= {
     nombre : '',
+    tipo: '',
+    factorBase: ''
     }
     await getData()
     showDialog.value = false
@@ -125,7 +145,8 @@ async function removeItem(item) {
             type : 'Error'
             
         }
-        notificationDialog.value = true
+        notificationDialog.value = true     
+           buttonLoading.value = false
         return
         }else{
           notification.value = {
@@ -135,11 +156,13 @@ async function removeItem(item) {
         }
         notificationDialog.value = true
         }
+                buttonLoading.value = false
+
     showDialogDelete.value = false
     await getData()
 }
 
 return{
-    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading
+    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading, buttonLoading
 }
 })

@@ -16,6 +16,8 @@ const showDialogDelete = ref(false)
 const notificationDialog = ref(false)
 const notification = ref({})
 const isEdit = ref(false)
+const buttonLoading = ref(false)
+
 async function getData() {
     const result = await apiCall('materiaPrima/categorias')
     if(result.status!=200){
@@ -28,6 +30,7 @@ async function getData() {
 function add(){
     data.value = {
         nombre : '',
+      
     }
     showDialog.value = true
 }
@@ -40,6 +43,8 @@ function edit(item){
     showDialog.value = true
 }
 async function save() {
+        buttonLoading.value = true
+
     const dataValues = Object.values(data.value)
     const errors = validate(dataValues)
     if(errors.length>0){
@@ -49,6 +54,8 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
     }else{
         if(isEdit.value){
@@ -60,6 +67,8 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
             }else{
                 const result = await apiCall(`materiaPrima/categorias/${dataEdit.value.id}/`,'PATCH', obj)
@@ -71,6 +80,8 @@ async function save() {
             
         }
             notificationDialog.value = true
+                    buttonLoading.value = false
+
             return
                 }else{
                     notification.value = {
@@ -83,7 +94,8 @@ async function save() {
             }
         }else{
              const obj = {
-            nombre : data.value.nombre 
+            nombre : data.value.nombre,
+           
         }
         const result = await apiCall('materiaPrima/categorias/','POST', obj)
         if(result.status!=201){
@@ -94,6 +106,8 @@ async function save() {
             
         }
             notificationDialog.value = true
+                    buttonLoading.value = false
+
             return
 
         }else{
@@ -105,7 +119,8 @@ async function save() {
         notificationDialog.value = true
         }
         }
-       
+               buttonLoading.value = false
+
         data.value= {
     nombre : '',
     }
@@ -126,6 +141,8 @@ async function removeItem(item) {
             
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
         }else{
           notification.value = {
@@ -135,11 +152,13 @@ async function removeItem(item) {
         }
         notificationDialog.value = true
         }
+                buttonLoading.value = false
+
     showDialogDelete.value = false
     await getData()
 }
 
 return{
-    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading
+    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading,buttonLoading
 }
 })

@@ -11,7 +11,7 @@ const UnitStore = useUnitStore()
 const headersCat = [{
   key : 'nombre',
   title : 'Nombre',
-  align : 'center'
+  align : 'start'
 },{
   key : 'actions',
   title : 'Acciones',
@@ -22,7 +22,15 @@ const headersCat = [{
 const headersUnit = [{
   key : 'nombre',
   title : 'Nombre',
-  align: 'center'
+  align: 'start'
+},{
+  key : 'tipo',
+  title : 'Tipo',
+  align : 'start'
+},{
+  key : 'factorBase',
+  title : 'Factor de conversión',
+  align : 'start'
 },{
   key : 'actions',
   title : 'Acciones',
@@ -41,6 +49,19 @@ const formFieldsUnit = [{
   label : 'Nombre',
   required: true,
   key : 'nombre'
+},{
+  key : 'tipo',
+  label : 'Tipo',
+  type : 'select',
+  options: ['Masa','Volumen','Longitud','Unidad'],
+  required: true,
+
+},{
+  key : 'factorBase',
+  label : 'Factor de conversión',
+  type : 'number',
+  required: true,
+
 },]
 const nameViewCat = 'Categorías' 
 const nameViewUnit = 'Unidades'

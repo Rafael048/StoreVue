@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export async function apiCall(  url,method = 'GET', obj = null){
-    const backendUrl = 'http://127.0.0.1:8000'
+    const backendUrl = import.meta.env.VITE_DIRECCION_BACKEND
     try{
         const config = {
             method,

@@ -14,7 +14,8 @@
           :location="$vuetify.display.mobile ? 'bottom' : undefined"
           temporary
         >
-          <v-list>
+          <v-list>         
+              <v-list-item title="DashBoard" to="/"/>
             <v-list-item title="Proveedores" to="/materiaPrima/proveedores"/>
             <v-list-item title="Categorias y unidades" to="/materiaPrima/categorias&unidades"/>
             <v-list-item title="Materia Prima" to="/materiaPrima"/>

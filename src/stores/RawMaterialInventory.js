@@ -6,11 +6,11 @@ import dataComprobation from "../../utils/DataComprobation";
 import { useRawMaterialStore } from "./RawMaterial";
 export const useRawMaterialInventoryStore = defineStore('RawMaterialInventory',()=>{
 const RawMaterialStore = useRawMaterialStore()
-const comprobations = dataComprobation()
 const items = ref([])
 const data = ref({
     materiaPrima : '',
     cantidad : '',
+    unidadInv : '',
     id : ''
 })
 const loading = ref(true)
@@ -19,6 +19,8 @@ const showDialog = ref(false)
 const showDialogDelete = ref(false)
 const notificationDialog = ref(false)
 const notification = ref({})
+const buttonLoading = ref(false)
+
 const isEdit = ref(false)
 async function getData() {
     const result = await apiCall('materiaPrima/')
@@ -34,6 +36,7 @@ async function getData() {
 function add(){
     data.value = {
     materiaPrima : '',
+    unidadInv: '',
     cantidad : ''
 }
     showDialog.value = true
@@ -43,12 +46,15 @@ function edit(item){
     dataEdit.value = {...item}
      data.value = {
     materiaPrima : '',
-    cantidad : ''
+    cantidad : '',
+    unidadInv: ''
 }
     isEdit.value = true
     showDialog.value = true
 }
 async function save() {
+        buttonLoading.value = true
+
     const dataValues = Object.values(data.value)
 
     const errors = validate(dataValues)
@@ -59,11 +65,25 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
     }else{
+        if(data.value.unidadInv.tipo!=data.value.materiaPrima.tipoUnidad){
+             notification.value = {
+            title : 'Error de medida',
+            messages : 'No se pueden combinar unidades de medida de diferente tipo',
+            type : 'Error'
+        }
+        notificationDialog.value = true
+                buttonLoading.value = false
+
+        return
+        }
+       const cantidad = data.value.cantidad*(data.value.materiaPrima.factorBase*data.value.unidadInv.factorBase)
              const obj = {
                 materiaPrima: data.value.materiaPrima.id,
-                cantidad : data.value.cantidad
+                cantidad : cantidad
         }
         const result = await apiCall(`materiaPrima/inventario/${data.value.materiaPrima.inventario.id}/`,'PATCH', obj)
         console.log(result)
@@ -75,6 +95,8 @@ async function save() {
             
         }
             notificationDialog.value = true
+                    buttonLoading.value = false
+
             return
 
         }else{
@@ -86,7 +108,8 @@ async function save() {
         notificationDialog.value = true
         }
         
-       
+               buttonLoading.value = false
+
     data.value = {
     materiaPrima : '',
     cantidad : ''
@@ -122,6 +145,6 @@ async function save() {
 // }
 
 return{
-    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, showDialogDelete, loading
+    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, showDialogDelete, loading, buttonLoading
 }
 })

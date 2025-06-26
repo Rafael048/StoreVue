@@ -20,6 +20,8 @@ const showDialogDelete = ref(false)
 const notificationDialog = ref(false)
 const notification = ref({})
 const isEdit = ref(false)
+const buttonLoading = ref(false)
+
 async function getData() {
     const result = await apiCall('materiaPrima/')
     if(result.status!=200){
@@ -57,6 +59,8 @@ function edit(item){
     showDialog.value = true
 }
 async function save() {
+        buttonLoading.value = true
+
     const dataValues = Object.values(data.value)
 
     const errors = validate(dataValues)
@@ -67,6 +71,8 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
     }else{
         if(isEdit.value){
@@ -78,6 +84,8 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
             }else{
                 const result = await apiCall(`materiaPrima/${dataEdit.value.id}/`,'PATCH', obj)
@@ -89,6 +97,8 @@ async function save() {
             
         }
             notificationDialog.value = true
+                    buttonLoading.value = false
+
             return
                 }else{
                     notification.value = {
@@ -116,6 +126,8 @@ async function save() {
             
         }
             notificationDialog.value = true
+                    buttonLoading.value = false
+
             return
 
         }else{
@@ -127,7 +139,8 @@ async function save() {
         notificationDialog.value = true
         }
         }
-       
+               buttonLoading.value = false
+
         data.value= {
     nombre : '',
     precio : '',
@@ -152,6 +165,8 @@ async function removeItem(item) {
             
         }
         notificationDialog.value = true
+                buttonLoading.value = false
+
         return
         }else{
           notification.value = {
@@ -161,11 +176,13 @@ async function removeItem(item) {
         }
         notificationDialog.value = true
         }
+                buttonLoading.value = false
+
     showDialogDelete.value = false
     await getData()
 }
 
 return{
-    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading
+    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading, buttonLoading
 }
 })

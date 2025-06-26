@@ -3,7 +3,7 @@
         <v-text-field v-model="search" variant="outlined" class="ma-3" :label="`Buscar`" prepend-inner-icon="mdi-magnify">
            
         </v-text-field>
-            <v-data-table :items="store.items" :headers="headers" :loading="store.loading" :search="search"
+            <v-data-table :items="store.items" :headers="headers" :loading="store.loading" :search="search" items-per-page-text="Elementos" :header-props="{class : 'text-h6'}"
   >
                 <template v-slot:item.actions="{item}" class="aling-end">
                     <v-menu>
@@ -42,7 +42,7 @@
                     <v-btn @click="()=>store.showDialogDelete=!store.showDialogDelete">
                         Cancelar
                     </v-btn>
-                    <v-btn @click="()=>props.store.removeItem(itemToDelete)" class="bg-red">
+                    <v-btn @click="()=>props.store.removeItem(itemToDelete)" class="bg-red" :loading="store.buttonLoading">
                         Aceptar
                     </v-btn>
                 </v-card-actions>

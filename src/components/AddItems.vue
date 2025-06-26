@@ -33,9 +33,9 @@
                     </v-row>
                 </template>
                 <template v-else>
-                    <v-text-field variant="outlined" :type="field.type" :label="field.label" :required="field.required" v-model="props.store.data[field.key]" v-if="field.type!='select'">
+                    <v-text-field variant="outlined" :type="field.type" :label="field.label" :required="field.required" v-model="props.store.data[field.key]" v-if="field.type!='select'&&!(field.key==='factorBase'&&store.data.tipo==='Unidad')" @blur="field.type==='number'?notNegative(props.store.data[field.key],field.key):null ">
                     </v-text-field>
-                    <v-autocomplete variant="outlined"  :label="field.label" :required="field.required" v-model="props.store.data[field.key]" :items="field.options" v-else item-value="id" item-title="nombre" :return-object="field.key==='materiaPrima'" >
+                    <v-autocomplete variant="outlined"  :label="field.label" :required="field.required" v-model="props.store.data[field.key]" :items="field.options" v-else-if="field.type==='select'" item-value="id" item-title="nombre" :return-object="field.key==='materiaPrima'||field.key==='unidadInv'" >
     
                     </v-autocomplete>
 
@@ -43,7 +43,7 @@
 
             </template>
         <v-card-actions>
-            <v-btn @click="props.store.save()" class="bg-success">
+            <v-btn @click="props.store.save()" class="bg-success" :loading="store.buttonLoading">
                 Guardar
             </v-btn>
         </v-card-actions>
@@ -56,6 +56,11 @@
         formFields : Array,
         nameView : String
     })
+    function notNegative(number, key){
+        if(number<0){
+            props.store.data[key] = 0
+        }
+    }
 </script>
 <style scoped>
 

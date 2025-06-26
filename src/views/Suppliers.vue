@@ -10,16 +10,16 @@ const SupplierStore = useSupplierStore()
 const headers = [{
   key : 'nombre',
   title : 'Nombre',
-  align : 'center',
+  align : 'start',
   
 },{
   key : 'codigo',
   title : 'Código',
-  align : 'center'
+  align : 'start'
 },{
   key : 'telefonoVista',
   title : 'Telefono',
-  align : 'center'
+  align : 'start'
 },{
   key : 'actions',
   title : 'Acciones',
