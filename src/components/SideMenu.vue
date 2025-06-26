@@ -15,9 +15,11 @@
           temporary
         >
           <v-list>
-            <v-list-item title="Proveedores" to="/materiaPrima/proveedores">
+            <v-list-item title="Proveedores" to="/materiaPrima/proveedores"/>
+            <v-list-item title="Categorias y unidades" to="/materiaPrima/categorias&unidades"/>
+            <v-list-item title="Materia Prima" to="/materiaPrima"/>
 
-            </v-list-item>
+
         </v-list>
         </v-navigation-drawer>
      

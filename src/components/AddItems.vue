@@ -1,6 +1,7 @@
 <template>
- <v-btn @click="props.store.add()">
-    Agregar 
+ <v-btn :prepend-icon="!$vuetify.display.xs?nameView==='Inventario'?'mdi-store-plus':'mdi-plus':''"  @click="props.store.add()" class="ma-3" variant="tonal" color="primary" align="center" rounded="xs">
+    <v-icon :icon="nameView==='Inventario'?'mdi-store-plus':'mdi-plus'" v-if="$vuetify.display.xs"></v-icon>
+   {{ !$vuetify.display.xs?`Agregar ${nameView}`: null}}
  </v-btn>
 
  <v-dialog v-model="props.store.showDialog" :max-width="$vuetify.display.xs?'100%':'500px'">
@@ -19,7 +20,7 @@
                                 </v-text-field>
                             </template>
                             <template v-else>
-                                <v-autocomplete variant="outlined" :type="field.subType" :label="field.subLabel" :required="field.required" v-model="props.store.data[field.subKey]" :items="['412','414']">
+                                <v-autocomplete variant="outlined" :type="field.subType" :label="field.subLabel" :required="field.required" v-model="props.store.data[field.subKey]" :items="field.options">
         
                                 </v-autocomplete>
                             </template>
@@ -32,8 +33,11 @@
                     </v-row>
                 </template>
                 <template v-else>
-                    <v-text-field variant="outlined" :type="field.type" :label="field.label" :required="field.required" v-model="props.store.data[field.key]">
+                    <v-text-field variant="outlined" :type="field.type" :label="field.label" :required="field.required" v-model="props.store.data[field.key]" v-if="field.type!='select'">
                     </v-text-field>
+                    <v-autocomplete variant="outlined"  :label="field.label" :required="field.required" v-model="props.store.data[field.key]" :items="field.options" v-else item-value="id" item-title="nombre" :return-object="field.key==='materiaPrima'" >
+    
+                    </v-autocomplete>
 
                 </template>
 

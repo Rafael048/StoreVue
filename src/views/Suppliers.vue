@@ -9,18 +9,22 @@ const SupplierStore = useSupplierStore()
 
 const headers = [{
   key : 'nombre',
-  title : 'Nombre'
+  title : 'Nombre',
+  align : 'center',
+  
 },{
   key : 'codigo',
-  title : 'Código'
+  title : 'Código',
+  align : 'center'
 },{
   key : 'telefonoVista',
-  title : 'Telefono'
+  title : 'Telefono',
+  align : 'center'
 },{
   key : 'actions',
   title : 'Acciones',
   sortable : false,
-  aling : 'end'
+  align : 'end'
 }
 ]
 const formFields = [{
@@ -40,19 +44,21 @@ const formFields = [{
   key : 'telefono',
   subType : 'select',
   subLabel : 'Código',
-  subKey : 'codigoTel'
+  subKey : 'codigoTel',
+  options : ['0412','0414']
 },]
 const nameView = 'Proveedores' 
 onMounted(async()=>{
   await SupplierStore.getData()
-  console.log(SupplierStore.items)
 })
 
 </script>
 
 <template>
   <v-card class="ma-0 pa-0" >
-      <Header>
+      <Header
+      :nameView="nameView"
+      >
       </Header>
       <AddItems
       :store = SupplierStore
@@ -62,7 +68,9 @@ onMounted(async()=>{
       <v-card-item>
         <Table 
         :store="SupplierStore"
-        :headers="headers"/>
+        :headers="headers"
+        :nameView = nameView
+/>
 
       </v-card-item>
       

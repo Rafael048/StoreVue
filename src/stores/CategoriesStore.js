@@ -3,14 +3,11 @@ import { ref } from "vue";
 import { apiCall } from "../../utils/apiCall";
 import validate from "../../utils/validateInfo";
 import dataComprobation from "../../utils/DataComprobation";
-export const useSupplierStore = defineStore('Supplier',()=>{
+export const useCategorieStore = defineStore('Categories',()=>{
 const comprobations = dataComprobation()
 const items = ref([])
 const data = ref({
     nombre : '',
-    codigo : '',
-    telefono : '',
-    codigoTel : ''
 })
 const loading = ref(true)
 const dataEdit = ref({})
@@ -20,13 +17,10 @@ const notificationDialog = ref(false)
 const notification = ref({})
 const isEdit = ref(false)
 async function getData() {
-    const result = await apiCall('materiaPrima/proveedor')
+    const result = await apiCall('materiaPrima/categorias')
     if(result.status!=200){
         console.error(result.statusText)
     }else{
-        result.data.forEach(supplier => {
-           supplier.telefonoVista =supplier.codigoTel + '-' +supplier.telefono
-        });
         items.value = result.data
     }
     loading.value = false
@@ -34,10 +28,6 @@ async function getData() {
 function add(){
     data.value = {
         nombre : '',
-        codigo : '',
-        telefono : '',
-        codigoTel : ''
-
     }
     showDialog.value = true
 }
@@ -45,10 +35,6 @@ function edit(item){
     dataEdit.value = {...item}
      data.value = {
         nombre : item.nombre,
-        codigo : item.codigo,
-        telefono : item.telefono,
-        codigoTel : item.codigoTel
-
     }
     isEdit.value = true
     showDialog.value = true
@@ -65,17 +51,6 @@ async function save() {
         notificationDialog.value = true
         return
     }else{
-       
-       if(!comprobations.isPhoneNumber(data.value.telefono)){
-        notification.value = {
-            title : 'Formato incorrecto',
-            messages : 'Los números de télefono deben ser de 8 digítos',
-            type : 'Error'
-        }
-        notificationDialog.value = true
-        return
-       }
-
         if(isEdit.value){
             const obj = comprobations.sameData(dataEdit.value,data.value)
             if(Object.getOwnPropertyNames(obj).length === 0){
@@ -87,7 +62,7 @@ async function save() {
         notificationDialog.value = true
         return
             }else{
-                const result = await apiCall(`materiaPrima/proveedor/${dataEdit.value.id}/`,'PATCH', obj)
+                const result = await apiCall(`materiaPrima/categorias/${dataEdit.value.id}/`,'PATCH', obj)
                 if(result.status!=200){
                      notification.value = {
             title : 'Error en el servidor',
@@ -100,7 +75,7 @@ async function save() {
                 }else{
                     notification.value = {
             title : 'Edición completada',
-            messages : `Se ha modificado el proveedor ${obj.nombre}`,
+            messages : `Se ha modificado la categoría ${obj.nombre}`,
             type : 'Success'
         }
         notificationDialog.value = true
@@ -108,12 +83,9 @@ async function save() {
             }
         }else{
              const obj = {
-            nombre : data.value.nombre,
-            codigo : data.value.codigo,
-            telefono : data.value.telefono,
-            codigoTel : data.value.codigoTel
+            nombre : data.value.nombre 
         }
-        const result = await apiCall('materiaPrima/proveedor/','POST', obj)
+        const result = await apiCall('materiaPrima/categorias/','POST', obj)
         if(result.status!=201){
              notification.value = {
             title : 'Error en el servidor',
@@ -127,7 +99,7 @@ async function save() {
         }else{
             notification.value = {
             title : 'Registro completado',
-            messages : `Se ha registrado el proveedor ${obj.nombre}`,
+            messages : `Se ha registrado la categoría ${obj.nombre}`,
             type : 'Success'
         }
         notificationDialog.value = true
@@ -136,9 +108,6 @@ async function save() {
        
         data.value= {
     nombre : '',
-    codigo : '',
-    telefono : '',
-    codigoTel : ''
     }
     await getData()
     showDialog.value = false
@@ -148,7 +117,7 @@ async function removeItem(item) {
     const obj = {
         eliminado : true
     }
-    const result = await apiCall(`materiaPrima/proveedor/${item.id}/`,'PATCH', obj)
+    const result = await apiCall(`materiaPrima/categorias/${item.id}/`,'PATCH', obj)
     if(result.status!=200){
             notification.value = {
             title : 'Error en el servidor',
@@ -161,7 +130,7 @@ async function removeItem(item) {
         }else{
           notification.value = {
             title : 'Eliminacion completada',
-            messages : `Se ha eliminado el proveedor ${item.nombre}`,
+            messages : `Se ha eliminado la categoría ${item.nombre}`,
             type : 'Success'
         }
         notificationDialog.value = true
@@ -171,6 +140,6 @@ async function removeItem(item) {
 }
 
 return{
-    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete,loading
+    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading
 }
 })

@@ -1,10 +1,16 @@
 <template>
-            <v-data-table :items="store.items" :headers="headers" >
+    <v-card border>
+        <v-text-field v-model="search" variant="outlined" class="ma-3" :label="`Buscar`" prepend-inner-icon="mdi-magnify">
+           
+        </v-text-field>
+            <v-data-table :items="store.items" :headers="headers" :loading="store.loading" :search="search"
+  >
                 <template v-slot:item.actions="{item}" class="aling-end">
                     <v-menu>
                            <template v-slot:activator="{ props }">
                 <v-btn variant="text" title="Acciones" icon="mdi-dots-vertical" v-bind="props"></v-btn>
               </template>
+              
 
               <v-list>
                   <v-btn  variant="text"
@@ -14,7 +20,18 @@
               </v-list>
                     </v-menu>
                 </template>
+                <template v-slot:item.precio="{item}">
+                    <p >
+                      ${{ item.precio }}
+                    </p>
+              </template>
+                <template v-slot:item.inventario.cantidad="{item}">
+                    <p :class="item.inventario.cantidad>10?'text-green':'text-red'">
+                      {{ item.inventario.cantidad }}
+                    </p>
+              </template>
         </v-data-table>
+    </v-card>
         <v-dialog v-model="store.showDialogDelete"  :max-width="$vuetify.display.xs?'100%':'500px'">
         <v-card>
             <v-card-title :class="$vuetify.display.smAndDown?'text-body-2 pa-3':'pa-3'">
@@ -35,9 +52,11 @@
 <script setup>
 import { ref } from 'vue'
 const itemToDelete = ref('')
+const search = ref('')
 const props = defineProps({
     store: Object,
-    headers : Array
+    headers : Array,
+    nameView: String
 })
 function deleteItem(item){
   props.store.showDialogDelete = true
