@@ -93,7 +93,8 @@ async function save() {
             type : 'Success'
         }
         notificationDialog.value = true
-        
+                        buttonLoading.value = false
+
                 }
             }
         }else{

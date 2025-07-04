@@ -93,6 +93,8 @@ async function save() {
             type : 'Error'
         }
         notificationDialog.value = true
+                        buttonLoading.value = false
+
         return
             }else{
                 const result = await apiCall(`materiaPrima/proveedor/${dataEdit.value.id}/`,'PATCH', obj)

@@ -1,6 +1,6 @@
 <template>
     <v-card border>
-        <v-text-field v-model="search" variant="outlined" class="ma-3" :label="`Buscar`" prepend-inner-icon="mdi-magnify">
+        <v-text-field v-model="search" variant="outlined" class="ma-3 " :label="`Buscar`" prepend-inner-icon="mdi-magnify">
            
         </v-text-field>
             <v-data-table :items="store.items" :headers="headers" :loading="store.loading" :search="search" items-per-page-text="Elementos" :header-props="{class : 'text-h6'}"
@@ -20,10 +20,13 @@
               </v-list>
                     </v-menu>
                 </template>
-                <template v-slot:item.precio="{item}">
+                <template v-slot:item.precio_promedio="{item}">
                     <p >
-                      ${{ item.precio }}
+                      ${{ item.precio_promedio }}
                     </p>
+              </template>
+               <template v-slot:item.inventario="{item}">
+                   <v-icon icon="mdi-store-settings" @click="subTableCall(item.id)"/>
               </template>
                 <template v-slot:item.inventario.cantidad="{item}">
                     <p :class="item.inventario.cantidad>10?'text-green':'text-red'">
@@ -48,16 +51,29 @@
                 </v-card-actions>
         </v-card>
     </v-dialog>
+    <SubTable v-if="props.subStore"
+      :store="props.subStore"
+      :headers="props.subHeader"
+      :items="subItems"
+      "/>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
+import SubTable from '@/components/SubTable.vue'
 const itemToDelete = ref('')
 const search = ref('')
+const subItems = computed(()=>props.subStore.items)
 const props = defineProps({
     store: Object,
     headers : Array,
-    nameView: String
+    nameView: String,
+    subStore: {type:Object, default: null},
+    subHeader: {type: Array, default: ()=>[]}
 })
+async function subTableCall(id){
+    await props.subStore.getData(id)    
+    props.subStore.subTable = true
+}
 function deleteItem(item){
   props.store.showDialogDelete = true
  itemToDelete.value = item

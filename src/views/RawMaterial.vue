@@ -24,7 +24,7 @@ const headers = [{
   align : 'start',
   
 },{
-  key : 'precio',
+  key : 'precio_promedio',
   title : 'Precio',
   align : 'start'
 },{
@@ -40,8 +40,28 @@ const headers = [{
   title : 'Unidad de medida',
   align : 'start'
 },{
-  key : 'inventario.cantidad',
+  key : 'cantidad_total',
   title : 'Cantidad en stock',
+  align : 'start'
+},{
+  key : 'inventario',
+  title : 'Inventario',
+  align : 'center',
+  sortable : false
+},{
+  key : 'actions',
+  title : 'Acciones',
+  sortable : false,
+  align : 'end'
+}
+]
+const subHeaders = [{
+  key : 'cantidad',
+  title : 'Cantidad en stock',
+  align : 'start'
+},{
+  key : 'precio',
+  title : 'Precio',
   align : 'start'
 },{
   key : 'actions',
@@ -55,10 +75,6 @@ const formFields = computed(()=>[{
   label : 'Nombre',
   type : 'text',
   
-},{
-  key : 'precio',
-  label : 'Precio',
-  type : 'number'
 },{
   key : 'categoria',
   label : 'Categoría',
@@ -86,6 +102,10 @@ const formFieldsInventory = computed(()=>
   label : 'Cantidad',
   type : 'number'
 },{
+  key : 'precio',
+  label : 'Precio',
+  type : 'number'
+},{
   key : 'unidadInv',
   label : 'Unidad de medida',
   type : 'select',
@@ -101,6 +121,7 @@ onMounted(async()=>{
     await CategoriesStore.getData()
     await UnitStore.getData()
     await RawMaterialStore.getData()
+    console.log(RawMaterialStore.items)
 })
 
 </script>
@@ -127,7 +148,8 @@ onMounted(async()=>{
         <Table 
         :store="RawMaterialStore"
         :headers="headers"
-
+        :subStore="RawMaterialInventoryStore"
+        :subHeader="subHeaders"
         />
         
       </v-card-item>
@@ -139,5 +161,6 @@ onMounted(async()=>{
    <Notifications
     :store="RawMaterialInventoryStore"
   ></Notifications>
+  
 
 </template>

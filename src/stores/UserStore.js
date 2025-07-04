@@ -3,11 +3,14 @@ import { ref } from "vue";
 import { apiCall } from "../../utils/apiCall";
 import validate from "../../utils/validateInfo";
 import dataComprobation from "../../utils/DataComprobation";
-export const useCategorieStore = defineStore('Categories',()=>{
+export const useUserStore = defineStore('User',()=>{
 const comprobations = dataComprobation()
 const items = ref([])
 const data = ref({
-    nombre : '',
+    nombre:'',
+    apellido:'',
+    username: '',
+    rol: ''
 })
 const loading = ref(true)
 const dataEdit = ref({})
@@ -19,27 +22,27 @@ const isEdit = ref(false)
 const buttonLoading = ref(false)
 
 async function getData() {
-    const result = await apiCall('materiaPrima/categorias')
-    if(result.status===200){
-        items.value = result.data
+    const result = await apiCall('usuarios/usuarios')
+    if(result.status!=200){
+        console.error(result.statusText)
     }else{
         
-        console.error(result.statusText)
+        items.value = result.data
     }
     loading.value = false
 }
-function add(){
-    data.value = {
-        nombre : '',
-      
-    }
-    showDialog.value = true
-}
+
 function edit(item){
     dataEdit.value = {...item}
      data.value = {
-        nombre : item.nombre,
+            nombre : item.nombre,
+           apellido : item.apellido,
+           username : item.username,
+           rol : item.rol
+        
     }
+    console.log(data.value, dataEdit.value)
+
     isEdit.value = true
     showDialog.value = true
 }
@@ -59,20 +62,21 @@ async function save() {
 
         return
     }else{
-        if(isEdit.value){
-            const obj = comprobations.sameData(dataEdit.value,data.value)
+        console.log(dataValues)
+        const obj = comprobations.sameData(dataEdit.value,data.value)
+        console.log(obj)
             if(Object.getOwnPropertyNames(obj).length === 0){
                    notification.value = {
             title : 'Datos sin modificar',
-            messages : 'No se dectaron cambios en los datos.',
+            messages : 'No se detectaron cambios en los datos.',
             type : 'Error'
         }
         notificationDialog.value = true
-                buttonLoading.value = false
+                        buttonLoading.value = false
 
         return
             }else{
-                const result = await apiCall(`materiaPrima/categorias/${dataEdit.value.id}/`,'PATCH', obj)
+                const result = await apiCall(`usuarios/usuarios/${dataEdit.value.id}/`,'PATCH', obj)
                 if(result.status!=200){
                      notification.value = {
             title : 'Error en el servidor',
@@ -87,53 +91,30 @@ async function save() {
                 }else{
                     notification.value = {
             title : 'Edición completada',
-            messages : `Se ha modificado la categoría ${obj.nombre}`,
+            messages : `Se ha modificado el usuario ${dataEdit.value.nombre}`,
             type : 'Success'
         }
         notificationDialog.value = true
                 }
             }
-        }else{
-             const obj = {
-            nombre : data.value.nombre,
-           
-        }
-        const result = await apiCall('materiaPrima/categorias/','POST', obj)
-        if(result.status!=201){
-             notification.value = {
-            title : 'Error en el servidor',
-            messages : result.statusText,
-            type : 'Error'
-            
-        }
-            notificationDialog.value = true
-                    buttonLoading.value = false
+       buttonLoading.value = false
 
-            return
-
-        }else{
-            notification.value = {
-            title : 'Registro completado',
-            messages : `Se ha registrado la categoría ${obj.nombre}`,
-            type : 'Success'
-        }
-        notificationDialog.value = true
-        }
-        }
-               buttonLoading.value = false
-
-        data.value= {
-    nombre : '',
-    }
+    data.value = {
+    nombre:'',
+    apellido:'',
+    username: '',
+    rol: ''
+}
     await getData()
     showDialog.value = false
     }
 }
 async function removeItem(item) {
     const obj = {
-        eliminado : true
+        activo : false
     }
-    const result = await apiCall(`materiaPrima/categorias/${item.id}/`,'PATCH', obj)
+    const result = await apiCall(`usuarios/usuarios/${item.id}/`,'PATCH', obj)
+    console.log(result)
     if(result.status!=200){
             notification.value = {
             title : 'Error en el servidor',
@@ -148,18 +129,18 @@ async function removeItem(item) {
         }else{
           notification.value = {
             title : 'Eliminacion completada',
-            messages : `Se ha eliminado la categoría ${item.nombre}`,
+            messages : `Se ha eliminado el usuario ${item.nombre}`,
             type : 'Success'
         }
         notificationDialog.value = true
-        }
                 buttonLoading.value = false
 
+        }
     showDialogDelete.value = false
     await getData()
 }
 
 return{
-    getData, items,showDialog,add, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete, loading,buttonLoading
+    getData, items,showDialog, data,save, notification, notificationDialog, edit , isEdit, dataEdit, removeItem, showDialogDelete,loading, buttonLoading
 }
 })

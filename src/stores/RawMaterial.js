@@ -8,7 +8,6 @@ const comprobations = dataComprobation()
 const items = ref([])
 const data = ref({
     nombre : '',
-    precio : '',
     unidad : '',
     proveedor : '',
     categoria : ''
@@ -36,7 +35,6 @@ async function getData() {
 function add(){
     data.value = {
         nombre : '',
-        precio : '',
         unidad :'',
         proveedor : '',
         categoria : ''
@@ -49,7 +47,6 @@ function edit(item){
     dataEdit.value = {...item}
      data.value = {
         nombre : item.nombre,
-        precio : item.precio,
         unidad : item.unidad,
         proveedor : item.proveedor,
         categoria : item.categoria
@@ -112,7 +109,6 @@ async function save() {
         }else{
              const obj = {
             nombre : data.value.nombre,
-            precio : Number(data.value.precio),
             unidad_id : data.value.unidad,
             proveedor_id : data.value.proveedor,
             categoria_id : data.value.categoria
@@ -143,7 +139,6 @@ async function save() {
 
         data.value= {
     nombre : '',
-    precio : '',
     unidad : '',
     proveedor : '',
     categoria : ''

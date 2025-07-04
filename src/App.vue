@@ -7,7 +7,7 @@ import SideMenu from './components/SideMenu.vue';
   <v-app >
      <v-container  max-width="100%">
        <SideMenu/>
-      <v-main>
+      <v-main min-height="100%">
         <RouterView />
       </v-main>
      </v-container>

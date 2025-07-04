@@ -1,5 +1,5 @@
 <template>
- <v-btn :prepend-icon="!$vuetify.display.xs?nameView==='Inventario'?'mdi-store-plus':'mdi-plus':''"  @click="props.store.add()" class="ma-3" variant="tonal" color="primary" align="center" rounded="xs">
+ <v-btn v-if="nameView!='Usuarios'" :prepend-icon="!$vuetify.display.xs?nameView==='Inventario'?'mdi-store-plus':'mdi-plus':''"  @click="props.store.add()" class="ma-3" variant="tonal" color="primary" align="center" rounded="xs">
     <v-icon :icon="nameView==='Inventario'?'mdi-store-plus':'mdi-plus'" v-if="$vuetify.display.xs"></v-icon>
    {{ !$vuetify.display.xs?`Agregar ${nameView}`: null}}
  </v-btn>
@@ -35,7 +35,7 @@
                 <template v-else>
                     <v-text-field variant="outlined" :type="field.type" :label="field.label" :required="field.required" v-model="props.store.data[field.key]" v-if="field.type!='select'&&!(field.key==='factorBase'&&store.data.tipo==='Unidad')" @blur="field.type==='number'?notNegative(props.store.data[field.key],field.key):null ">
                     </v-text-field>
-                    <v-autocomplete variant="outlined"  :label="field.label" :required="field.required" v-model="props.store.data[field.key]" :items="field.options" v-else-if="field.type==='select'" item-value="id" item-title="nombre" :return-object="field.key==='materiaPrima'||field.key==='unidadInv'" >
+                    <v-autocomplete variant="outlined"  :label="field.label" :required="field.required" v-model="props.store.data[field.key]" :items="field.options" v-else-if="field.type==='select'&&!(field.key==='materiaPrima'&&store.isEdit)" item-value="id" item-title="nombre" :return-object="field.key==='materiaPrima'||field.key==='unidadInv'" >
     
                     </v-autocomplete>
 
